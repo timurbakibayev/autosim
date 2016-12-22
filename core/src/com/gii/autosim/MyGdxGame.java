@@ -11,6 +11,7 @@ import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.TimeUtils;
 
 public class MyGdxGame extends ApplicationAdapter {
+	public static String TAG = "MyGdxGame time:";
 	Texture car1;
 	public OrthographicCamera camera;
 	public SpriteBatch batch;
@@ -44,7 +45,7 @@ public class MyGdxGame extends ApplicationAdapter {
 				lastTime += AutoSim.timeInterval;
 			AutoSim.update();
 		} else {
-			Gdx.app.log("MyGdxGame time:",lastTime + "," + newTime);
+			Gdx.app.log(TAG,lastTime + "," + newTime);
 		}
 
 		if(Gdx.input.isTouched() && !Gdx.input.isTouched(1)) {
