@@ -13,7 +13,10 @@ public class Car {
     public static String TAG = "Car.java";
     float width = 3.8f;
     float height = 1.8f;
-    float maxSpeed = 30;
+    float maxSpeed = 60;
+    float maxAcceleration = 10;
+    float minAcceleration = -20;
+
     CarState currentState = new CarState();
     CarState goalState = null;
 
@@ -36,7 +39,7 @@ public class Car {
     private void control(float timeInterval) {
         if (goalState == null)
             return;
-        ControlCar.changeSpeedAndDirection(this);
+        ControlCar.changeSpeedAndDirection(this, timeInterval);
     }
 
     private void move(float timeInterval) {

@@ -8,5 +8,5 @@ public class CarState {
     float y = 0;
     float rotation = 0;
     float speed = 0; //kmh
-    float acceleration = 1; //kmh/s
+    float acceleration = 5; //kmh/s
 }
