@@ -1,5 +1,7 @@
 package com.gii.autosim;
 
+import com.badlogic.gdx.math.Vector3;
+
 import java.util.ArrayList;
 
 /**
@@ -9,6 +11,7 @@ public class AutoSim {
     public static String TAG = "AutoSim.java";
     public static ArrayList<Car> cars = new ArrayList<Car>();
     public static float timeInterval = 1000/40;
+    public static Vector3 target = new Vector3(-1,-1,0);
 
     public static void generateCars() {
         //for (int i = 0; i < 1; i++) {

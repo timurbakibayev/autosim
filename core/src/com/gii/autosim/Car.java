@@ -13,9 +13,9 @@ public class Car {
     public static String TAG = "Car.java";
     float width = 3.8f;
     float height = 1.8f;
-    float maxSpeed = 60;
+    float maxSpeed = 30;
     CarState currentState = new CarState();
-    CarState goalState = new CarState();
+    CarState goalState = null;
 
     public Car(float x, float y, float rotation) {
         this.currentState.x = x;
@@ -29,7 +29,14 @@ public class Car {
     }
     public void update(float timeInterval) {
         //x = x + 3/timeInterval; //10 = 36kmh
+        control(timeInterval);
         move(timeInterval);
+    }
+
+    private void control(float timeInterval) {
+        if (goalState == null)
+            return;
+
     }
 
     private void move(float timeInterval) {
@@ -44,7 +51,7 @@ public class Car {
         float newY = currentState.y + (float)(Math.sin(radians) * s);
         currentState.x = newX;
         currentState.y = newY;
-        currentState.speed = Math.min(currentState.speed + currentState.acceleration * t,maxSpeed);
+        currentState.speed = Math.max(Math.min(currentState.speed + currentState.acceleration * t,maxSpeed),0);
         Gdx.app.log(TAG, "move speed: " + currentState.speed + " (added " + currentState.acceleration * t + ")");
     }
 }

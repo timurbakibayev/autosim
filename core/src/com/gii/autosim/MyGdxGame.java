@@ -13,9 +13,16 @@ import com.badlogic.gdx.utils.TimeUtils;
 public class MyGdxGame extends ApplicationAdapter {
 	public static String TAG = "MyGdxGame time:";
 	Texture car1;
+	Texture target;
 	public OrthographicCamera camera;
 	public SpriteBatch batch;
+	public boolean mapMoved = false;
+	public boolean oneFinger = false;
 	private Rectangle carRectangle;
+	long lastTime = 0;
+	Vector3 lastMouse = new Vector3(-1,-1,0);
+	Vector3 lastMouseScreen = new Vector3(-1,-1,0);
+	int lastFingerDistance = -1;
 
 	float x = 0, y = 100;
 	
@@ -27,13 +34,11 @@ public class MyGdxGame extends ApplicationAdapter {
 		batch = new SpriteBatch();
 		//img = new Texture("badlogic.jpg");
 		car1 = new Texture(Gdx.files.internal("car1.png"));
+		target = new Texture(Gdx.files.internal("target.png"));
 		AutoSim.generateCars();
 	}
 
-	long lastTime = 0;
 
-	Vector3 lastMouse = new Vector3(-1,-1,0);
-	int lastFingerDistance = -1;
 
 	@Override
 	public void render () {
@@ -50,21 +55,37 @@ public class MyGdxGame extends ApplicationAdapter {
 		}
 
 		if(Gdx.input.isTouched() && !Gdx.input.isTouched(1)) {
+			oneFinger = true;
 			Vector3 touchPos = new Vector3();
 			touchPos.set(Gdx.input.getX(), Gdx.input.getY(), 0);
 			Vector3 touch1 = new Vector3(touchPos.x,touchPos.y,touchPos.z);
 			camera.unproject(touch1);
 			if (lastMouse.x != -1) {
-				camera.position.set(camera.position.x - (touch1.x - lastMouse.x),
-						camera.position.y - (touch1.y - lastMouse.y), 0);
-				camera.update();
-			}
+				if (((touchPos.x - lastMouseScreen.x)*(touchPos.x - lastMouseScreen.x) +
+						(touchPos.y - lastMouseScreen.y)*(touchPos.y - lastMouseScreen.y)) > 100) {
+					camera.position.set(camera.position.x - (touch1.x - lastMouse.x),
+							camera.position.y - (touch1.y - lastMouse.y), 0);
+					camera.update();
+					mapMoved = true;
+					lastMouseScreen.set(touchPos);
+				}
+			} else
+				lastMouseScreen.set(touchPos);
 			camera.unproject(touchPos);
 			lastMouse.set(touchPos);
-		} else
-			lastMouse.set(-1,-1,0);
+		} else {
+			if (lastMouse.x != -1) {
+				if (!mapMoved && oneFinger) {
+					AutoSim.target.set(lastMouse);
+				}
+				lastMouse.set(-1, -1, 0);
+				mapMoved = false;
+			}
+			lastMouseScreen.set(-1,-1,0);
+		}
 
 		if (Gdx.input.isTouched(1)) {
+			oneFinger = false;
 			Vector3 finger1 = new Vector3();
 			Vector3 finger2 = new Vector3();
 			finger1.set(Gdx.input.getX(0), Gdx.input.getY(0), 0);
@@ -91,6 +112,9 @@ public class MyGdxGame extends ApplicationAdapter {
 		for (Car car : AutoSim.cars) {
 			car.draw(batch,car1);
 		}
+		if (AutoSim.target.x != -1) {
+			batch.draw(target, AutoSim.target.x - 2, AutoSim.target.y - 2, 2, 2,4,4,1,1,0,0,0,64,64,false,false);
+		}
 		batch.end();
 	}
 	
@@ -98,5 +122,6 @@ public class MyGdxGame extends ApplicationAdapter {
 	public void dispose () {
 		batch.dispose();
 		car1.dispose();
+		target.dispose();
 	}
 }
