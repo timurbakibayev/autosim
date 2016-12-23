@@ -8,6 +8,7 @@ import com.badlogic.gdx.math.Rectangle;
 
 /**
  * Created by Timur_hnimdvi on 22-Dec-16.
+ * Changed by Kuanysh!
  */
 public class Car {
     public static String TAG = "Car.java";
