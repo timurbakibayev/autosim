@@ -38,7 +38,8 @@ public class MyGdxGame extends ApplicationAdapter {
 	@Override
 	public void render () {
 		long newTime =  TimeUtils.millis();
-		if (lastTime == 0 || (newTime - lastTime) > AutoSim.timeInterval) {
+		if (lastTime == 0 || (newTime - lastTime) > AutoSim.timeInterval ||
+				(lastTime > newTime)) {
 			if (lastTime == 0)
 				lastTime = newTime;
 			else

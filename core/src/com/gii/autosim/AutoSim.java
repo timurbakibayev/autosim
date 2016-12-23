@@ -1,7 +1,5 @@
 package com.gii.autosim;
 
-import com.badlogic.gdx.Gdx;
-
 import java.util.ArrayList;
 
 /**
@@ -13,13 +11,13 @@ public class AutoSim {
     public static float timeInterval = 1000/40;
 
     public static void generateCars() {
-        for (int i = 0; i < 5; i++) {
-            cars.add(new Car(i*5, i*5));
-        }
+        //for (int i = 0; i < 1; i++) {
+        cars.add(new Car(10, 20, 21));
+        //}
     }
 
     public static void update() {
-        Gdx.app.log(TAG, "update");
+//        Gdx.app.log(TAG, "update");
         for (Car car : cars) {
             car.update(timeInterval);
         }
