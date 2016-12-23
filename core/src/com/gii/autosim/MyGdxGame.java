@@ -13,7 +13,7 @@ import com.badlogic.gdx.utils.TimeUtils;
 public class MyGdxGame extends ApplicationAdapter {
 	public static String TAG = "MyGdxGame time:";
 	Texture car1;
-	Texture target;
+	Texture targetImage;
 	public OrthographicCamera camera;
 	public SpriteBatch batch;
 	public boolean mapMoved = false;
@@ -34,7 +34,7 @@ public class MyGdxGame extends ApplicationAdapter {
 		batch = new SpriteBatch();
 		//img = new Texture("badlogic.jpg");
 		car1 = new Texture(Gdx.files.internal("car1.png"));
-		target = new Texture(Gdx.files.internal("target.png"));
+		targetImage = new Texture(Gdx.files.internal("target.png"));
 		AutoSim.generateCars();
 	}
 
@@ -77,6 +77,7 @@ public class MyGdxGame extends ApplicationAdapter {
 			if (lastMouse.x != -1) {
 				if (!mapMoved && oneFinger) {
 					AutoSim.target.set(lastMouse);
+                    AutoSim.goTo(AutoSim.target);
 				}
 				lastMouse.set(-1, -1, 0);
 				mapMoved = false;
@@ -113,7 +114,7 @@ public class MyGdxGame extends ApplicationAdapter {
 			car.draw(batch,car1);
 		}
 		if (AutoSim.target.x != -1) {
-			batch.draw(target, AutoSim.target.x - 2, AutoSim.target.y - 2, 2, 2,4,4,1,1,0,0,0,64,64,false,false);
+			batch.draw(targetImage, AutoSim.target.x - 2, AutoSim.target.y - 2, 2, 2,4,4,1,1,0,0,0,64,64,false,false);
 		}
 		batch.end();
 	}
@@ -122,6 +123,6 @@ public class MyGdxGame extends ApplicationAdapter {
 	public void dispose () {
 		batch.dispose();
 		car1.dispose();
-		target.dispose();
+		targetImage.dispose();
 	}
 }

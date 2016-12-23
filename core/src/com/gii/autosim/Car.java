@@ -36,7 +36,7 @@ public class Car {
     private void control(float timeInterval) {
         if (goalState == null)
             return;
-
+        ControlCar.changeSpeedAndDirection(this);
     }
 
     private void move(float timeInterval) {
@@ -46,12 +46,13 @@ public class Car {
         float s = speedMS * t + accMS * t * t / 2f;
         Gdx.app.log(TAG, "move: time:" + timeInterval + ", speedMS: " +speedMS + ", accMS: "+ accMS +
                     ", t:" + t + ", s:" + s);
-        float radians = (float)(currentState.rotation / Math.PI);
+        float radians = (float)(currentState.rotation * Math.PI / 180);
         float newX = currentState.x + (float)(Math.cos(radians) * s);
         float newY = currentState.y + (float)(Math.sin(radians) * s);
         currentState.x = newX;
         currentState.y = newY;
         currentState.speed = Math.max(Math.min(currentState.speed + currentState.acceleration * t,maxSpeed),0);
         Gdx.app.log(TAG, "move speed: " + currentState.speed + " (added " + currentState.acceleration * t + ")");
+        Gdx.app.log(TAG, "radians: " + radians);
     }
 }

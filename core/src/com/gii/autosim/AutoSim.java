@@ -15,7 +15,7 @@ public class AutoSim {
 
     public static void generateCars() {
         //for (int i = 0; i < 1; i++) {
-        cars.add(new Car(10, 20, 21));
+        cars.add(new Car(10, 20, 75));
         //}
     }
 
@@ -24,5 +24,15 @@ public class AutoSim {
         for (Car car : cars) {
             car.update(timeInterval);
         }
+    }
+
+    public static void goTo(Vector3 target) {
+        CarState goal = new CarState();
+        goal.x = target.x;
+        goal.y = target.y;
+        goal.speed = 0;
+        goal.rotation = 0;
+        goal.acceleration = 0;
+        cars.get(0).goalState = goal;
     }
 }
