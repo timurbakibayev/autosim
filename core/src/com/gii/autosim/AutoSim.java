@@ -15,7 +15,7 @@ public class AutoSim {
 
     public static void generateCars() {
         //for (int i = 0; i < 1; i++) {
-        cars.add(new Car(10, 20, 75));
+        cars.add(new Car(10, 20, 45));
         //}
     }
 
@@ -33,6 +33,6 @@ public class AutoSim {
         goal.speed = 0;
         goal.rotation = 0;
         goal.acceleration = 0;
-        cars.get(0).goalState = goal;
+        cars.get(0).goalStates.add(goal);
     }
 }

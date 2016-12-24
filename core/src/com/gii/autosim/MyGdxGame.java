@@ -114,7 +114,8 @@ public class MyGdxGame extends ApplicationAdapter {
 			car.draw(batch,car1);
 		}
 		if (AutoSim.target.x != -1) {
-			batch.draw(targetImage, AutoSim.target.x - 2, AutoSim.target.y - 2, 2, 2,4,4,1,1,0,0,0,64,64,false,false);
+			for (CarState goalState : AutoSim.cars.get(0).goalStates)
+				batch.draw(targetImage, goalState.x - 2, goalState.y - 2, 2, 2,4,4,1,1,0,0,0,64,64,false,false);
 		}
 		batch.end();
 	}

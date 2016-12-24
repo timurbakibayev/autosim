@@ -6,6 +6,8 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
 
+import java.util.ArrayList;
+
 /**
  * Created by Timur_hnimdvi on 22-Dec-16.
  * Changed by Kuanysh!
@@ -17,9 +19,10 @@ public class Car {
     float maxSpeed = 60;
     float maxAcceleration = 10;
     float minAcceleration = -20;
+    float comfortDeceleration = 10;
 
     CarState currentState = new CarState();
-    CarState goalState = null;
+    ArrayList<CarState> goalStates = new ArrayList<CarState>();
 
     public Car(float x, float y, float rotation) {
         this.currentState.x = x;
@@ -38,8 +41,10 @@ public class Car {
     }
 
     private void control(float timeInterval) {
-        if (goalState == null)
+        if (goalStates.size() == 0) {
+            currentState.acceleration = minAcceleration;
             return;
+        }
         ControlCar.changeSpeedAndDirection(this, timeInterval);
     }
 
