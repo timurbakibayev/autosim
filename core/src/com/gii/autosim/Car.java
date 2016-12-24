@@ -1,7 +1,6 @@
 package com.gii.autosim;
 
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
@@ -53,15 +52,15 @@ public class Car {
         float accMS = currentState.acceleration * 1000f / 3600f;
         float t = timeInterval / 1000f;
         float s = speedMS * t + accMS * t * t / 2f;
-        Gdx.app.log(TAG, "move: time:" + timeInterval + ", speedMS: " +speedMS + ", accMS: "+ accMS +
-                    ", t:" + t + ", s:" + s);
+        //Gdx.app.log(TAG, "move: time:" + timeInterval + ", speedMS: " +speedMS + ", accMS: "+ accMS +
+        //            ", t:" + t + ", s:" + s);
         float radians = (float)(currentState.rotation * Math.PI / 180);
         float newX = currentState.x + (float)(Math.cos(radians) * s);
         float newY = currentState.y + (float)(Math.sin(radians) * s);
         currentState.x = newX;
         currentState.y = newY;
         currentState.speed = Math.max(Math.min(currentState.speed + currentState.acceleration * t,maxSpeed),0);
-        Gdx.app.log(TAG, "move speed: " + currentState.speed + " (added " + currentState.acceleration * t + ")");
-        Gdx.app.log(TAG, "radians: " + radians);
+//        Gdx.app.log(TAG, "move speed: " + currentState.speed + " (added " + currentState.acceleration * t + ")");
+//        Gdx.app.log(TAG, "radians: " + radians);
     }
 }
