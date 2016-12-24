@@ -32,6 +32,8 @@ public class ControlCar {
             }
             totalDistance += distance(car.goalStates.get(i).x,car.goalStates.get(i).y, car.goalStates.get(i+1).x,car.goalStates.get(i+1).y);
             prevPoint.set(car.goalStates.get(i).x,car.goalStates.get(i).y,0);
+            if (totalDistance > 500)
+                break;
         }
 
         float rotationSpeed = 60 * timeInterval /1000; //grad / s
