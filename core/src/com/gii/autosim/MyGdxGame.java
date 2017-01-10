@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.TimeUtils;
@@ -16,6 +17,7 @@ public class MyGdxGame extends ApplicationAdapter {
 	Texture targetImage;
 	public OrthographicCamera camera;
 	public SpriteBatch batch;
+	public ShapeRenderer shapeRenderer;
 	public boolean mapMoved = false;
 	public boolean oneFinger = false;
 	private Rectangle carRectangle;
@@ -32,6 +34,8 @@ public class MyGdxGame extends ApplicationAdapter {
 		camera.setToOrtho(false, 800/10, 480/10);
 		camera.position.set(camera.viewportWidth / 2f, camera.viewportHeight / 2f, 0);
 		batch = new SpriteBatch();
+        shapeRenderer = new ShapeRenderer();
+        shapeRenderer.setAutoShapeType(true);
 		//img = new Texture("badlogic.jpg");
 		car1 = new Texture(Gdx.files.internal("car1.png"));
 		targetImage = new Texture(Gdx.files.internal("target.png"));
@@ -109,9 +113,14 @@ public class MyGdxGame extends ApplicationAdapter {
 		Gdx.gl.glClearColor(1f, 1f, 1f, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		batch.setProjectionMatrix(camera.combined);
+		shapeRenderer.setProjectionMatrix(camera.combined);
+        shapeRenderer.begin();
+        shapeRenderer.setColor(1,0,0,1);
 		batch.begin();
 		for (Car car : AutoSim.cars) {
 			car.draw(batch,car1);
+            if (car.predictPolygon.getVertices().length>0)
+                shapeRenderer.polygon(car.predictPolygon.getVertices());
 		}
 		if (AutoSim.target.x != -1) {
 			for (Car car : AutoSim.cars) {
@@ -120,11 +129,13 @@ public class MyGdxGame extends ApplicationAdapter {
 			}
 		}
 		batch.end();
+        shapeRenderer.end();
 	}
 	
 	@Override
 	public void dispose () {
 		batch.dispose();
+        shapeRenderer.dispose();
 		car1.dispose();
 		targetImage.dispose();
 	}

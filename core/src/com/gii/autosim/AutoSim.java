@@ -16,7 +16,7 @@ public class AutoSim {
 
     public static void generateCars() {
         Random rnd = new Random();
-        for (int i = 0; i < 5; i++) {
+        for (int i = 0; i < 10; i++) {
            cars.add(new Car(rnd.nextInt(200), rnd.nextInt(200), rnd.nextInt(180)));
         }
     }
