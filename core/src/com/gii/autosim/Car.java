@@ -25,6 +25,7 @@ public class Car {
     float comfortDeceleration = 10;
     Polygon predictPolygon = new Polygon();
     Polygon rightNowPolygon = new Polygon();
+    Car conflictCar = null;
 
     CarState currentState = new CarState();
     ArrayList<CarState> goalStates = new ArrayList<CarState>();
@@ -76,7 +77,7 @@ public class Car {
         float speedMS = currentState.speed * 1000f / 3600f;
         float accMS = currentState.acceleration * 1000f / 3600f;
         float t = timeInterval / 1000f;
-        float s = speedMS * t + accMS * t * t / 2f;
+        float s = Math.max(speedMS * t + accMS * t * t / 2f,0);
         float radians = (float)(currentState.rotation * Math.PI / 180);
         float newX = currentState.x + (float)(Math.cos(radians) * s);
         float newY = currentState.y + (float)(Math.sin(radians) * s);
