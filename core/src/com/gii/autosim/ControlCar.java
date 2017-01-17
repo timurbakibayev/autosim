@@ -19,7 +19,7 @@ public class ControlCar {
 
         car.currentState.acceleration = car.maxAcceleration;
         float newRotation = Geometry.angle(car.currentState.x,car.currentState.y,car.goalStates.get(0).x,car.goalStates.get(0).y);
-        float dRotation = newRotation - car.currentState.rotation; //By what angle should we turn in order to go to goalStates(0)
+        float dRotation = newRotation - car.currentState.rotation;
         float distanceToGoal = (Geometry.distance(car.currentState.x,car.currentState.y,car.goalStates.get(0).x,car.goalStates.get(0).y));
 
         boolean weNeedToBreak = false;
@@ -44,57 +44,43 @@ public class ControlCar {
                 break;
         }
 
-
-
-        boolean conflict = false;
-        car.conflictCar = null;
-
-        car.predictTwoSecondsToPredictPolygon();
-
-        for (Car car1 : AutoSim.cars) {
-            try {
-                if (car1 != car) {
-                    if (intersector.intersectPolygons(car.predictPolygon, car1.predictPolygon, Geometry.tempPolygon)) {
-                        float car1angle = Geometry.angle(car.currentState.x, car.currentState.y, car1.currentState.x, car1.currentState.y);
-                        car1angle = Geometry.normalizeAngle(car1angle - car.currentState.rotation);
-                        if (car1angle < 5 && car1angle > -85) {
-                            conflict = true;
-                            car.conflictCar = car1;
-                            if (car1.conflictCar == car) {
-                                dRotation = 15;
-                            }
-                        }
-//                        Gdx.app.log(TAG, "car1Angle: " + car1angle + " conflict: " + conflict);
-                    }
-                    if (intersector.intersectPolygons(car.rightNowPolygon, car1.rightNowPolygon, Geometry.tempPolygon)) {
-                        //float car1angle = Geometry.angle(car.currentState.x, car.currentState.y, car1.currentState.x, car1.currentState.y);
-                        //car1angle = Geometry.normalizeAngle(car1angle - car.currentState.rotation);
-                        //if (car1angle < 5 && car1angle > -85)
-                        //    conflict = true;
-                        //Gdx.app.log(TAG, "Force STOP");
-                        //car.currentState.speed = 0;
-                    }
-                }
-            } catch (Exception e) {}
-        }
-
         float rotationSpeed = 60 * timeInterval /1000; //grad / s
         float sign = 1;
-        Geometry.normalizeAngle(dRotation);
+        dRotation = Geometry.normalizeAngle(dRotation);
         if (dRotation < 0)
             sign = -1;
         float maxSpeedForCurrentTurn = Geometry.maxSpeedOnAngle(dRotation);
 
-        if (car.currentState.speed > maxSpeedForCurrentTurn || conflict) {
+        boolean conflict = false;
+
+
+        car.predictTwoSecondsToPredictPolygon();
+
+        for (Car car1 : AutoSim.cars) {
+            if (car1 != car) {
+                if (intersector.intersectPolygons(car.predictPolygon,car1.predictPolygon,Geometry.tempPolygon)) {
+                    float car1angle = Geometry.angle(car.currentState.x, car.currentState.y, car1.currentState.x, car1.currentState.y);
+                    car1angle = Geometry.normalizeAngle(car1angle - car.currentState.rotation);
+                    if (car1angle < 5 && car1angle > -85)
+                        conflict = true;
+                    Gdx.app.log(TAG, "car1Angle: " + car1angle + " conflict: " + conflict);
+                }
+                if (intersector.intersectPolygons(car.rightNowPolygon,car1.rightNowPolygon,Geometry.tempPolygon)) {
+                    //float car1angle = Geometry.angle(car.currentState.x, car.currentState.y, car1.currentState.x, car1.currentState.y);
+                    //car1angle = Geometry.normalizeAngle(car1angle - car.currentState.rotation);
+                    //if (car1angle < 5 && car1angle > -85)
+                    //    conflict = true;
+                    //Gdx.app.log(TAG, "Force STOP");
+                    //car.currentState.speed = 0;
+                }
+            }
+        }
+
+        if (car.currentState.speed > maxSpeedForCurrentTurn || conflict)
             //car.currentState.acceleration = Math.min(Math.max (-(car.currentState.speed - maxSpeed)/2, car.minAcceleration),car.comfortDeceleration);
             car.currentState.acceleration = car.minAcceleration;
-            if (conflict && car.currentState.speed < 2 && car.conflictCar.conflictCar == car) {
-                car.currentState.acceleration = 0;
-                car.currentState.speed = 2;
-                Gdx.app.log(TAG, "dual-conflict");
-            }
-        } else {
-            car.currentState.rotation = Geometry.normalizeAngle(car.currentState.rotation + sign * Math.min(Math.abs(dRotation), rotationSpeed));
+        else {
+            car.currentState.rotation += sign * Math.min(Math.abs(dRotation), rotationSpeed);
             if (weNeedToBreak) {
                 car.currentState.acceleration = car.minAcceleration;
             }
